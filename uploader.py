@@ -1,3 +1,4 @@
+import io
 import yaml
 import uuid
 from minio import Minio
@@ -7,7 +8,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 # Чтение credentials
-with open('credentials.yaml', 'r') as file:
+with open('credentials_genomai.yaml', 'r') as file:
     credentials = yaml.safe_load(file)
 
 MINIO_HOST = credentials['host']
@@ -15,6 +16,7 @@ MINIO_PORT = credentials['minio_api']['port']
 MINIO_ACCESS_KEY = credentials['minio_api']['access_key']
 MINIO_SECRET_KEY = credentials['minio_api']['secret_key']
 
+BUCKET_NAME = 'scitranslate'
 
 # Подключение к Minio
 minio_client = Minio(
@@ -24,13 +26,27 @@ minio_client = Minio(
     secure=False
 )
 
-bucket_name = 'mlflow'
-# object_uuid = str(uuid.uuid4())
+
+def put_file(file: io.BytesIO):
+    """
+    """
+    object_uuid = str(uuid.uuid4())
+    minio_client.put_object(BUCKET_NAME, object_uuid, file, file.getbuffer().nbytes)
+    return object_uuid
+
+
+def get_file(object_uuid):
+    response = minio_client.get_object(BUCKET_NAME, object_uuid)
+    return response.read()
+
+# 
 # file_path = 'Библиотека.docx'
 # minio_client.fput_object(bucket_name, object_uuid, file_path)
 
-result = minio_client.get_object(bucket_name, "c908e6e6-a909-4d4d-a26a-051e46a7c4f9")
-print(result.read())
+# result = minio_client.get_object(bucket_name, "842dded5-9b4e-4ce8-a6f3-5c7ceefdbb0e")
+# with open("output.docx", "wb") as f:
+#     f.write(result.read())
+# print(result.read())
 # try:
 #     print(minio_client.list_buckets())
 # except MaxRetryError:
