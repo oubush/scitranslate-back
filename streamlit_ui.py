@@ -43,7 +43,7 @@ if submitted and uploaded_file is not None:
                 bucket_name=BUCKET_NAME,
                 file=uploaded_file
             )
-            logging.info('File uploaded to S3 with name ' +\
+            print('File uploaded to S3 with name ' +\
                          st.session_state['object_uuid'])
             st.session_state['upload_successful'] = True
         except Exception as exc:
