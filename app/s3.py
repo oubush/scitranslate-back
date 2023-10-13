@@ -5,8 +5,11 @@ from minio import Minio
 
 
 class S3Handler:    
+    """
+    Creates Minio client and provides high-level interface to
+    put and get operations.
+    """
     def __init__(self):
-        # Initialize your AWS S3 client here
         MINIO_HOST = os.getenv('MINIO_HOST')
         MINIO_PORT = os.getenv('MINIO_PORT')
         MINIO_ACCESS_KEY = os.getenv('MINIO_ACCESS_KEY')
@@ -20,8 +23,7 @@ class S3Handler:
         )
 
     def upload_to_s3(self, bucket_name: str, file: BinaryIO) -> str:
-        """
-        """
+        """Puts a binary file-like object to the S3 storage."""
         object_uuid = str(uuid.uuid4())
         self.client.put_object(
             bucket_name=bucket_name,
@@ -32,13 +34,9 @@ class S3Handler:
         return object_uuid
     
     def get_from_s3(self, bucket_name: str, object_uuid: str) -> bytes:
-        """
-        """
+        """Gets a bytes object from the S3 storage by object name."""
         response = self.client.get_object(
             bucket_name=bucket_name,
             object_name=object_uuid
         )
         return response.read()
-
-
-    
