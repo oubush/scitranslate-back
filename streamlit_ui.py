@@ -92,7 +92,7 @@ if st.session_state.get('file_is_valid') and\
                     fstorage.client.make_bucket(BUCKET_NAME)
                 st.session_state['trans_object_uuid'] = fstorage.upload_to_s3(
                     bucket_name=BUCKET_NAME,
-                    file=uploaded_file
+                    file=translated_docx
                 )
                 logging.info('Translated file uploaded to S3 with name ' +\
                             st.session_state['trans_object_uuid'])
